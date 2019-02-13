@@ -1,0 +1,7 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <dimen name="border_divider_height">6dp</dimen>
+    <dimen name="border_padding_spans">3dp</dimen>
+    <dimen name="card_corner_radius">2dp</dimen>
+    <dimen name="card_elevation">3dp</dimen>
+</resources>

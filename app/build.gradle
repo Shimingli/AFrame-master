@@ -1,0 +1,75 @@
+apply plugin: 'com.android.application'
+
+android {
+    compileSdkVersion 26
+
+    defaultConfig {
+        applicationId "com.woaiqw.aframe"
+        minSdkVersion 16
+        targetSdkVersion 26
+        versionCode 1
+        versionName "1.0"
+        flavorDimensions "versionCode"
+        ndk { abiFilters 'armeabi','armabi-v7a',"x86" ,"x86_64"}
+    }
+    repositories {
+            flatDir {
+                dirs 'libs'   // aar目录
+            }
+        }
+    compileOptions {
+        sourceCompatibility JavaVersion.VERSION_1_8
+        targetCompatibility JavaVersion.VERSION_1_8
+    }
+    signingConfigs {
+        release {
+            keyAlias "shopTools"
+            keyPassword "shopTools1234"
+            storeFile file("../shopTools.jks")
+            storePassword "shopTools1234"
+        }
+    }
+    productFlavors {
+        majiabao {}
+    }
+    buildTypes {
+        release {
+            minifyEnabled false
+            proguardFiles getDefaultProguardFile('proguard-android.txt'), 'proguard-rules.pro'
+            buildConfigField("String", "AppIdConfig", "\"11902131130\"")
+        }
+        debug { buildConfigField("String", "AppIdConfig", "\"11902131130\"") }
+    }
+}
+
+dependencies {
+    implementation fileTree(include: ['*.jar'], dir: 'libs')
+    implementation 'com.android.support:appcompat-v7:26.1.0'
+    implementation project(':base')
+    annotationProcessor 'com.jakewharton:butterknife-compiler:8.5.1'
+    implementation 'com.android.support:recyclerview-v7:26.1.0'
+    implementation 'com.github.woaigmz:SmartDiffAdapter:0.2.1'
+    implementation 'com.android.support:cardview-v7:26.1.0'
+    // 添加下面的内容
+    implementation (name: 'alipaySdk-15.5.9-20181123210657', ext: 'aar')
+
+}
+
+
+/** Apk输出目录 */
+def getApkDir() {
+    return rootProject.getBuildDir().getPath() + File.separator + "outputs" + File.separator + "apk"
+}
+
+/**   文件夹名称 带着 build的版本 */
+String build_number =14
+/** 重命名release包 */
+android.applicationVariants.all { variant ->
+
+    variant.outputs.each { output ->
+        if (variant.buildType.name.equals("release")) {
+            def releaseApkName = "majiabao_${variant.versionName}_(${"release"})_${build_number}.apk"
+            variant.getPackageApplication().outputDirectory  = new File("/${getApkDir()}/${releaseApkName}")
+        }
+    }
+}
